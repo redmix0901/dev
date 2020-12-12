@@ -1,0 +1,9 @@
+{
+    "name": "node",
+    "version": "1.0.0",
+    "description": "A React Native development environment using Docker.",
+    "scripts": {},
+    "dependencies": {},
+    "author": "DJackMonkeyKing",
+    "license": "ISC"
+}
