@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:20.04
 
 # Set up locales
 ENV LANG C.UTF-8
@@ -6,7 +6,8 @@ ENV LANGUAGE C.UTF-8
 ENV LC_ALL C.UTF-8
 
 # Initial apt update
-RUN apt-get update && apt-get -y install wget curl git software-properties-common python-software-properties
+RUN ln -snf /usr/share/zoneinfo/$CONTAINER_TIMEZONE /etc/localtime && echo $CONTAINER_TIMEZONE > /etc/timezone
+RUN apt-get update && apt-get -y install wget curl git software-properties-common
 
 # Install common / shared packages
 RUN add-apt-repository ppa:ondrej/php
@@ -24,7 +25,7 @@ RUN apt-get update && apt-get install -y \
     net-tools telnet \
     python \
     python-dev \
-    python-pip
+    python3-pip
 
 # Install PHP7.4
 RUN  apt-get -y install php7.4 php7.4-cgi php7.4-cli php7.4-common php7.4-curl php7.4-dev php7.4-gd php7.4-gmp php7.4-json php7.4-ldap php7.4-mysql \

@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:20.04
 
 # Set up locales
 ENV LANG C.UTF-8
@@ -6,6 +6,7 @@ ENV LANGUAGE C.UTF-8
 ENV LC_ALL C.UTF-8
 
 # Initial apt update
+RUN ln -snf /usr/share/zoneinfo/$CONTAINER_TIMEZONE /etc/localtime && echo $CONTAINER_TIMEZONE > /etc/timezone
 RUN apt-get update && apt-get -y install wget curl git software-properties-common
 
 # Install common / shared packages
@@ -25,19 +26,20 @@ RUN apt-get update && apt-get install -y \
     telnet \
 	python \
     python-dev \
-	python-pip 
+	python3-pip \
+    mongodb
 
 # Import the Public Key used by the Ubuntu Package Manager
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6
+#RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6
 
 # Create a file list for mongoDB to fetch the current repository
-RUN echo "deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-3.2.list
+#RUN echo "deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-3.2.list
 
 # Update the Ubuntu Packages
-RUN apt-get update 
+# RUN apt-get update 
 
-# Install MongoDB
-RUN apt-get install mongodb -y
+# # Install MongoDB
+# RUN apt-get install mongodb -y
 # install -y mongodb-org=3.2 mongodb-org-server=3.2 mongodb-org-shell=3.2 mongodb-org-mongos=3.2 mongodb-org-tools=3.2
 
 # Install PHP5.6

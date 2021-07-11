@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:20.04
 
 # Set up locales
 ENV LANG C.UTF-8
@@ -6,11 +6,12 @@ ENV LANGUAGE C.UTF-8
 ENV LC_ALL C.UTF-8
 
 # Initial apt update
-RUN apt-get update && apt-get -y install wget curl git software-properties-common python-software-properties
+RUN ln -snf /usr/share/zoneinfo/$CONTAINER_TIMEZONE /etc/localtime && echo $CONTAINER_TIMEZONE > /etc/timezone
+RUN apt-get update && apt-get -y install wget curl git software-properties-common
 
 # Install common / shared packages
 RUN add-apt-repository ppa:ondrej/php
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get --fix-broken install -y \
     zip \
     unzip \
     vim \
@@ -24,7 +25,7 @@ RUN apt-get update && apt-get install -y \
     net-tools \
 	python \
     python-dev \
-	python-pip
+	python3-pip
 
 # Install PHP7.2
 RUN	apt-get -y install php7.2 php7.2-cgi php7.2-cli php7.2-common php7.2-curl php7.2-dev php7.2-gd php7.2-gmp php7.2-json php7.2-ldap php7.2-mysql \
