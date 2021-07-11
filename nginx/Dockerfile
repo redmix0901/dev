@@ -1,11 +1,14 @@
-FROM ubuntu:16.04
+FROM ubuntu:20.04
 
 # Set up locales
 ENV LANG C.UTF-8
 ENV LANGUAGE C.UTF-8
 ENV LC_ALL C.UTF-8
 
+# Initial apt update
+RUN ln -snf /usr/share/zoneinfo/$CONTAINER_TIMEZONE /etc/localtime && echo $CONTAINER_TIMEZONE > /etc/timezone
 RUN apt-get update && apt-get -y install wget curl git software-properties-common
+
 RUN apt-get update && apt-get install -y \
     zip \
     unzip \
@@ -20,7 +23,7 @@ RUN apt-get update && apt-get install -y \
     net-tools \
 	python \
     python-dev \
-	python-pip 
+    python3-pip
 
 # Set time asia/ho_chi_minh
 RUN \

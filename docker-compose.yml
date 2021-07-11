@@ -5,13 +5,20 @@ services:
         build: 
             context: ./nginx
             dockerfile: Dockerfile
+        # image: nginx:1.18
+        #restart: always
         ports:
             - "80:80"
             - "443:443"
         volumes:
             - ${DOCUMENT_ROOT}:/var/www
-            - ${NGINX_CONFIG}:/etc/nginx/conf.d
+            - ${NGINX_CONFIG}/vhost.conf:/etc/nginx/conf.d/default.conf
             - ${NGINX_LOG}:/var/log/nginx
+            # - ./nginx/h5bp:/etc/nginx/h5bp
+            # - ./nginx/mime.types:/etc/nginx/mime.types
+            # - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+            #- ./nginx/fastcgi.conf:/etc/nginx/fastcgi.conf
+            #- ./nginx/fastcgi_params:/etc/nginx/fastcgi_params
             - ./nginx/php5.conf:/etc/nginx/php5.conf
             #- ./nginx/php72.conf:/etc/nginx/php72.conf
             - ./nginx/php74.conf:/etc/nginx/php74.conf
@@ -19,7 +26,7 @@ services:
             - php5
             #- php72
             - php74
-        network_mode: "host"
+        #network_mode: host
         dns:
             - 8.8.8.8
             - 8.8.4.4
@@ -85,6 +92,7 @@ services:
         volumes:
             - ${MARIADB_DATA}:/var/lib/mysql/
             - ${MARIADB_IMPORT_DB}:/var/www/databases/
+            - ${MARIADB_IMPORT_DB}:/docker-entrypoint-initdb.d
         environment:
             MYSQL_ROOT_PASSWORD: ""
             MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
@@ -140,28 +148,28 @@ services:
         ports:
             - "6379:6379"
 
-    node:
-        build: 
-            context: ./node
-            dockerfile: Dockerfile
-        depends_on:
-            - redis
-        ports:
-            - "8082:8082"
-        network_mode: "host"
-        volumes:
-            - ${DOCUMENT_ROOT}:/var/www
-        dns:
-            - 8.8.8.8
-            - 8.8.4.4
-    rabbitmq:
-        image: rabbitmq:3-management
-        environment:
-            RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
-            RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
-        ports:
-            - "15672:15672"
-            - "5672:5672"
-        dns:
-            - 8.8.8.8
-            - 8.8.4.4
+    # node:
+    #     build: 
+    #         context: ./node
+    #         dockerfile: Dockerfile
+    #     depends_on:
+    #         - redis
+    #     ports:
+    #         - "8082:8082"
+    #     network_mode: "host"
+    #     volumes:
+    #         - ${DOCUMENT_ROOT}:/var/www
+    #     dns:
+    #         - 8.8.8.8
+    #         - 8.8.4.4
+    # rabbitmq:
+    #     image: rabbitmq:3-management
+    #     environment:
+    #         RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+    #         RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    #     ports:
+    #         - "15672:15672"
+    #         - "5672:5672"
+    #     dns:
+    #         - 8.8.8.8
+    #         - 8.8.4.4
